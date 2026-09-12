@@ -36,7 +36,7 @@
     const SUPABASE_URL = "https://nrwsjcchkrayasgrofhn.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_iKo54dDAuYNG7LstbjOtAA_0LO84M-e";
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const form = document.getElementById('registrationForm');
     const statusMsg = document.getElementById('statusMessage');
@@ -51,9 +51,9 @@
       const dlsTeamName = document.getElementById('dlsTeamName').value.trim();
       const phoneNumber = document.getElementById('phoneNumber').value.trim();
 
-      const { data, error } = await supabase
-        .from('users')
-        .insert([{ dls_team_name: dlsTeamName, phone_number: phoneNumber }]);
+      const { data, error } = await supabaseClient
+  .from('users')
+  .insert([{ team_name: teamName, phone_number: phone }]);
 
       if (error) {
         statusMsg.innerText = "Error registering: " + error.message;
