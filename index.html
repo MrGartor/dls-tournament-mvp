@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paynesville DLS Champions Cup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen p-4 flex flex-col items-center justify-center">
+
+  <div class="max-w-md w-full bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
+    <h1 class="text-2xl font-bold text-emerald-400 mb-2 text-center">⚽ Paynesville DLS Cup</h1>
+    <p class="text-slate-400 text-sm mb-6 text-center">Register your DLS team for the upcoming free demo tournament!</p>
+
+    <form id="registrationForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">DLS Team Name</label>
+        <input type="text" id="dlsTeamName" required placeholder="e.g. Paynesville FC" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-emerald-500">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">WhatsApp / Phone Number</label>
+        <input type="tel" id="phoneNumber" required placeholder="e.g. 0881234567" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white focus:outline-none focus:border-emerald-500">
+      </div>
+
+      <button type="submit" id="submitBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded transition duration-200">
+        Register My Team
+      </button>
+    </form>
+
+    <div id="statusMessage" class="mt-4 text-center text-sm hidden"></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://nrwsjcchkrayasgrofhn.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_iKo54dDAuYNG7LstbjOtAA_0LO84M-e";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('registrationForm');
+    const statusMsg = document.getElementById('statusMessage');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Registering...";
+      statusMsg.classList.add('hidden');
+
+      const dlsTeamName = document.getElementById('dlsTeamName').value.trim();
+      const phoneNumber = document.getElementById('phoneNumber').value.trim();
+
+      const { data, error } = await supabase
+        .from('users')
+        .insert([{ dls_team_name: dlsTeamName, phone_number: phoneNumber }]);
+
+      if (error) {
+        statusMsg.innerText = "Error registering: " + error.message;
+        statusMsg.className = "mt-4 text-center text-sm text-rose-400";
+      } else {
+        statusMsg.innerText = "🎉 Successfully Registered! Welcome to the tournament.";
+        statusMsg.className = "mt-4 text-center text-sm text-emerald-400 font-semibold";
+        form.reset();
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Register My Team";
+      statusMsg.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
