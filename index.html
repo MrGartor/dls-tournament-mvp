@@ -53,7 +53,7 @@
 
       const { data, error } = await supabaseClient
   .from('users')
-  .insert([{ team_name: dlsTeamName, phone_number: phoneNumber }]);
+ .insert([{ dls_team_name: dlsTeamName, phone_number: phoneNumber }]);
 
       if (error) {
         statusMsg.innerText = "Error registering: " + error.message;
